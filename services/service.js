@@ -431,6 +431,48 @@
     $('#footer-company').innerHTML  = dict.footer.companyLinks.map(l => `<a href="${bxEscape(l.href)}">${bxEscape(l.label)}</a>`).join('');
   }
 
+  // Switch between sibling services in place (cross-fade, keep scroll) instead
+  // of a full page load that jumps to the top. All four pages share this markup.
+  const SLUG_RE = /([a-z-]+)(?:\.html)?$/;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let switching = false;
+
+  function showService(slug, toTop) {
+    if (toTop) window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    if (slug === document.body.dataset.serviceSlug || switching) return;
+    const main = $('#main');
+    const swap = () => {
+      document.body.dataset.serviceSlug = slug;
+      render();
+      const desc = $('meta[name="description"]');
+      const detail = (window.BX_SERVICES?.[document.documentElement.dataset.lang] || window.BX_SERVICES?.en)?.[slug];
+      if (desc && detail) desc.setAttribute('content', detail.hero.body);
+    };
+    if (reduceMotion || !main) return swap();
+    switching = true;
+    main.classList.add('svc-switching');
+    setTimeout(() => {
+      swap();
+      main.classList.remove('svc-switching');
+      switching = false;
+    }, 180);
+  }
+
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('.svc-sibling, #footer-services a');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    const m = a.getAttribute('href').match(SLUG_RE);
+    if (!m || !window.BX_SERVICES?.en?.[m[1]]) return;
+    e.preventDefault();
+    if (m[1] !== document.body.dataset.serviceSlug) history.pushState({ slug: m[1] }, '', a.href);
+    showService(m[1], !a.classList.contains('svc-sibling'));
+  });
+
+  window.addEventListener('popstate', () => {
+    const m = location.pathname.match(SLUG_RE);
+    if (m && window.BX_SERVICES?.en?.[m[1]]) showService(m[1], false);
+  });
+
   window.bxRender = render;
   document.addEventListener('DOMContentLoaded', render);
 })();
