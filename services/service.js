@@ -232,10 +232,16 @@
         </g>
 
         <!-- sync badge -->
-        <g transform="translate(178 78)">
-          <rect width="44" height="22" rx="11" fill="var(--bx-bg-card)" stroke="var(--bx-sky-600)" stroke-width="1"/>
-          <path d="M12 11 L8 11 M12 11 C12 8.2 14.2 6 17 6 C19.8 6 22 8.2 22 11 M22 11 L26 11 M22 11 C22 13.8 19.8 16 17 16 C14.2 16 12 13.8 12 11" stroke="#0284c7" stroke-width="1.5" fill="none" stroke-linecap="round" transform="translate(5 0)"/>
-          <text x="34" y="15" font-family="monospace" font-size="9" font-weight="700" fill="#0284c7">SYNC</text>
+        <g transform="translate(170 76)">
+          <rect width="60" height="24" rx="12" fill="var(--bx-bg-card)" stroke="var(--bx-sky-600)" stroke-width="1"/>
+          <g stroke="#0284c7" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.6 10.2 A4.8 4.8 0 0 1 18.2 9.4"/>
+            <path d="M18.4 6.8 L18.2 9.4 L15.6 9.2"/>
+            <path d="M18.4 13.8 A4.8 4.8 0 0 1 9.8 14.6"/>
+            <path d="M9.6 17.2 L9.8 14.6 L12.4 14.8"/>
+            <animateTransform attributeName="transform" type="rotate" from="0 14 12" to="360 14 12" dur="6s" repeatCount="indefinite"/>
+          </g>
+          <text x="25" y="15.5" font-family="monospace" font-size="9.5" font-weight="700" letter-spacing="0.5" fill="#0284c7">SYNC</text>
         </g>
       </svg>
     `,
