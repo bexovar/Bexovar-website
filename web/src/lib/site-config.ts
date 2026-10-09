@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "Bexovar",
   tagline: "Custom software & process automation",
-  domain: "bexovar.io",
-  email: "hello@bexovar.io",
+  domain: "bexovar.com.ar",
+  email: "hello@bexovar.com.ar",
   linkedin: "https://www.linkedin.com/company/bexovar",
   nav: [
     { href: "/services", label: "Services" },

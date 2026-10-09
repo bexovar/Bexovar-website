@@ -1,6 +1,6 @@
 # Bexovar Website
 
-Custom software & process automation studio — [bexovar.io](https://bexovar.io)
+Custom software & process automation studio — [bexovar.com.ar](https://bexovar.com.ar)
 
 ## Structure
 

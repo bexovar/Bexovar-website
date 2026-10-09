@@ -29,7 +29,7 @@ export async function generateMetadata({
   const { getCaseStudyBySlug } = await getContent(locale);
   const cs = getCaseStudyBySlug(slug);
   if (!cs) return { title: "Case study not found — Bexovar" };
-  const origin = "https://bexovar.io";
+  const origin = "https://bexovar.com.ar";
   const pathBase = `/case-studies/${slug}`;
   const languages = Object.fromEntries(
     locales.map((l) => [l, l === defaultLocale ? `${origin}${pathBase}` : `${origin}/${l}${pathBase}`]),
