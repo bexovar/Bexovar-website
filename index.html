@@ -432,7 +432,7 @@
     demos.innerHTML = t.demos.items.map(d => `
       <div class="bx-demo bx-reveal" data-demo-slug="${bxEscape(d.slug)}">
         <div class="bx-demo__poster">
-          <video controls preload="metadata" playsinline src="${bxEscape(d.video)}"></video>
+          <video controls preload="metadata" playsinline poster="${bxEscape(d.video.replace(/\.mp4$/, '-poster.jpg'))}" src="${bxEscape(d.video)}#t=1"></video>
         </div>
         <div class="bx-demo__row">
           <span class="bx-demo__cat">${bxEscape(d.category)}</span>
