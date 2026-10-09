@@ -9,7 +9,7 @@
   color: var(--bx-ink-50);
   font-size: 13px;
   text-decoration: none;
-  transition: color .2s;
+  transition: color 200ms var(--bx-ease-out);
 }
 .bx-breadcrumb a:hover { color: var(--bx-sky-600); }
 
@@ -103,7 +103,7 @@
   text-decoration: none;
   color: var(--bx-ink-50);
   border-right: 1px solid var(--bx-line);
-  transition: background .2s, color .2s;
+  transition: background 200ms var(--bx-ease-out), color 200ms var(--bx-ease-out);
   min-height: 80px;
   justify-content: center;
 }
@@ -142,7 +142,7 @@
   background: var(--bx-bg-card);
   border: 1px solid var(--bx-line);
   border-radius: var(--bx-radius-lg);
-  transition: transform .25s, box-shadow .25s, border-color .25s;
+  transition: transform 260ms var(--bx-ease-out), box-shadow 260ms var(--bx-ease-out), border-color 260ms var(--bx-ease-out);
 }
 .svc-example:hover {
   transform: translateY(-2px);
@@ -295,7 +295,7 @@
   border-radius: var(--bx-radius);
   text-decoration: none;
   color: inherit;
-  transition: transform .25s, box-shadow .25s, border-color .25s;
+  transition: transform 260ms var(--bx-ease-out), box-shadow 260ms var(--bx-ease-out), border-color 260ms var(--bx-ease-out);
 }
 .svc-demo:hover {
   transform: translateY(-2px);
@@ -323,6 +323,6 @@
 }
 
 /* In-place service switching (see service.js) */
-#main { transition: opacity 180ms ease, transform 180ms ease; }
+#main { transition: opacity 180ms var(--bx-ease-out), transform 180ms var(--bx-ease-out); }
 #main.svc-switching { opacity: 0; transform: translateY(6px); }
 @media (prefers-reduced-motion: reduce) { #main { transition: none; } }

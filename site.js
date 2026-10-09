@@ -5,6 +5,7 @@
 
   // --- Language toggle ----------------------------------------------------
   const htmlEl = document.documentElement;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const saved = localStorage.getItem('bx-lang');
   const browserPref = (navigator.language || 'en').toLowerCase().startsWith('es') ? 'es' : 'en';
   const initial = saved || htmlEl.dataset.initialLang || browserPref;
@@ -26,9 +27,17 @@
         const next = btn.dataset.bxLang;
         if (next === htmlEl.dataset.lang) return;
         localStorage.setItem('bx-lang', next);
-        htmlEl.dataset.lang = next;
-        htmlEl.lang = next;
-        window.dispatchEvent(new CustomEvent('bx:lang-change', { detail: { lang: next } }));
+        const apply = () => {
+          htmlEl.dataset.lang = next;
+          htmlEl.lang = next;
+          window.dispatchEvent(new CustomEvent('bx:lang-change', { detail: { lang: next } }));
+        };
+        if (reduceMotion) return apply();
+        htmlEl.classList.add('bx-lang-fade');
+        setTimeout(() => {
+          apply();
+          requestAnimationFrame(() => htmlEl.classList.remove('bx-lang-fade'));
+        }, 160);
       });
     });
     updateLangButtons();
@@ -59,6 +68,8 @@
     }
 
     // Reveal on scroll. Only opt into hide-then-reveal if IO is available.
+    // A MutationObserver also picks up .bx-reveal elements that pages render
+    // later (initial render, language switch), so nothing is left hidden.
     if ('IntersectionObserver' in window) {
       htmlEl.dataset.reveal = 'on';
       const io = new IntersectionObserver((entries) => {
@@ -68,32 +79,57 @@
             io.unobserve(e.target);
           }
         });
-      }, { rootMargin: '0px 0px -5% 0px', threshold: 0.01 });
-      document.querySelectorAll('.bx-reveal').forEach(el => io.observe(el));
-      // Safety net: force-reveal anything still hidden after 1.2s
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.01 });
+
+      const track = (el) => {
+        if (el.dataset.visible) return;
+        // Re-rendered content (language switch) that is already on screen or
+        // scrolled past shows immediately instead of animating in again.
+        if (reRendering && el.getBoundingClientRect().top < window.innerHeight) {
+          el.dataset.visible = 'static';
+          return;
+        }
+        const group = el.closest('.bx-stagger');
+        if (group) {
+          const i = [...group.querySelectorAll('.bx-reveal')].indexOf(el);
+          el.style.setProperty('--bx-reveal-delay', `${Math.min(i, 6) * 70}ms`);
+        }
+        io.observe(el);
+      };
+      const scan = (root) => {
+        if (root.nodeType !== 1) return;
+        if (root.classList.contains('bx-reveal')) track(root);
+        root.querySelectorAll('.bx-reveal').forEach(track);
+      };
+      scan(document.body);
+      const mo = new MutationObserver((records) => {
+        records.forEach(r => r.addedNodes.forEach(scan));
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
+      flushReveals = () => mo.takeRecords().forEach(r => r.addedNodes.forEach(scan));
+
+      // Safety net: force-reveal anything still hidden near the viewport
       setTimeout(() => {
-        document.querySelectorAll('.bx-reveal:not([data-visible="true"])').forEach(el => {
+        document.querySelectorAll('.bx-reveal:not([data-visible])').forEach(el => {
           const r = el.getBoundingClientRect();
           if (r.top < window.innerHeight + 200) el.dataset.visible = 'true';
         });
       }, 1200);
     }
 
-    // Stagger: if a parent has .bx-stagger, assign incremental delays to its .bx-reveal children
-    document.querySelectorAll('.bx-stagger').forEach((group) => {
-      [...group.querySelectorAll('.bx-reveal')].forEach((el, i) => {
-        el.style.setProperty('--bx-reveal-delay', `${i * 70}ms`);
-      });
-    });
-
     // ⌘K palette
     setupPalette();
   });
 
+  let reRendering = false;
+  let flushReveals = () => {};
   window.addEventListener('bx:lang-change', () => {
     updateLangButtons();
     // Let pages re-render themselves
+    reRendering = true;
     if (typeof window.bxRender === 'function') window.bxRender();
+    flushReveals();
+    reRendering = false;
   });
 
   function updateLangButtons() {
