@@ -28,7 +28,7 @@ export async function generateMetadata({
   const { getService } = await getContent(locale);
   const s = getService(slug);
   if (!s) return {};
-  const origin = "https://bexovar.io";
+  const origin = "https://bexovar.com.ar";
   const pathBase = `/services/${slug}`;
   const languages = Object.fromEntries(
     locales.map((l) => [l, l === defaultLocale ? `${origin}${pathBase}` : `${origin}/${l}${pathBase}`]),
