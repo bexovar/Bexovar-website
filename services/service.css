@@ -321,3 +321,8 @@
   font-size: 13px; line-height: 1.5;
   margin: 0;
 }
+
+/* In-place service switching (see service.js) */
+#main { transition: opacity 180ms ease, transform 180ms ease; }
+#main.svc-switching { opacity: 0; transform: translateY(6px); }
+@media (prefers-reduced-motion: reduce) { #main { transition: none; } }

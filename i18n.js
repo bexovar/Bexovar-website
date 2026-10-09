@@ -81,6 +81,7 @@ window.BX_I18N = {
     },
     process: {
       eyebrow: 'How we work',
+      phase: 'Phase',
       title: 'Predictable process. No mystery.',
       subtitle: "Every engagement follows the same four phases so you always know what's next, what's expected, and what you'll get.",
       steps: [
@@ -210,6 +211,7 @@ window.BX_I18N = {
     },
     process: {
       eyebrow: 'Proceso',
+      phase: 'Fase',
       title: 'Predecible. Sin misterios.',
       subtitle: 'Cuatro fases. Siempre sabés qué sigue.',
       steps: [
